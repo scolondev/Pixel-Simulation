@@ -13,7 +13,10 @@ namespace PixelSimulation.Pixel
         }
 
         public Dictionary<Vector2Int, PixelBody2D> pixels = new Dictionary<Vector2Int, PixelBody2D>();
+        public GameObject activePixelsParent;
+        public GameObject inactivePixelsParent;
         private List<PixelBody2D> activePixels = new List<PixelBody2D>();
+        private List<PixelBody2D> inactivePixels = new List<PixelBody2D>();
         public float gravity = -9.8f;
         public float refreshRate = 10f;
 
@@ -46,12 +49,16 @@ namespace PixelSimulation.Pixel
 
         public void AddActivePixel(PixelBody2D body)
         {
+            body.transform.SetParent(activePixelsParent.transform);
             if (!activePixels.Contains(body)) activePixels.Add(body);
+            if (inactivePixels.Contains(body)) inactivePixels.Remove(body);
         }
 
         public void RemoveActivePixel(PixelBody2D body)
         {
+            body.transform.SetParent(inactivePixelsParent.transform);
             if (activePixels.Contains(body)) activePixels.Remove(body);
+            if (!inactivePixels.Contains(body)) inactivePixels.Add(body);
         }
         public bool IsFree(Vector2Int position)
         {
