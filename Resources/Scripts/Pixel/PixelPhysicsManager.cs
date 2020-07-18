@@ -27,18 +27,19 @@ namespace PixelSimulation.Pixel
 
         public void PixelUpdate()
         {
-            float time = Time.realtimeSinceStartup;
+     //       float time = Time.realtimeSinceStartup;
             List<PixelBody2D> update = new List<PixelBody2D>(activePixels);
             foreach(var key in update)
             {
                 key.PhysicsUpdate();
               //  UpdateNearbyPixels(key);
             }
-            Debug.Log("Time Elapsed " + ((Time.realtimeSinceStartup - time) * 1000f));
+      //      Debug.Log("Time Elapsed " + ((Time.realtimeSinceStartup - time) * 1000f));
         }
 
         public void UpdateNearbyPixels(PixelBody2D body)
         {
+            //  if (inactivePixels.Contains(body)) return;
             //Get Surrounding Positions
             Vector2Int position = body.GetPosition();
             List<Vector2Int> surroundingPositions = new List<Vector2Int>();
@@ -46,22 +47,34 @@ namespace PixelSimulation.Pixel
             surroundingPositions.Add(new Vector2Int(position.x, position.y - 1)); //Down
             surroundingPositions.Add(new Vector2Int(position.x - 1, position.y)); //Left
             surroundingPositions.Add(new Vector2Int(position.x + 1, position.y)); //Right
-            surroundingPositions.Add(new Vector2Int(position.x - 1, position.y + 1)); //Up Left
-            surroundingPositions.Add(new Vector2Int(position.x - 1, position.y - 1)); //Down Left
-            surroundingPositions.Add(new Vector2Int(position.x + 1, position.y + 1)); //Up Right
-            surroundingPositions.Add(new Vector2Int(position.x + 1, position.y - 1)); //Down Right
-            
 
             //For each surrounding position, if we have that key, make sure that that key is active.
+            //This might cause problems
             foreach (var pos in surroundingPositions)
+            { 
                 if (pixels.ContainsKey(pos) && inactivePixels.Contains(pixels[pos]))
+                {
                     AddActivePixel(pixels[pos]);
+                    UpdateNearbyPixels(pixels[pos]);
+                }
+            }
         }
         public void FreePixel(Vector2Int position)
         {
             pixels.Remove(position);
         }
 
+        public void DestroyPixel(Vector2Int position)
+        {
+            if (pixels.ContainsKey(position))
+            {
+                PixelBody2D body = pixels[position];
+                pixels.Remove(position);
+                activePixels.Remove(body);
+                inactivePixels.Remove(body);
+                body.Destroy();
+            }
+        }
         public void SetPixel(Vector2Int position, PixelBody2D body)
         {
             if (pixels.ContainsKey(position)) pixels[position] = body;

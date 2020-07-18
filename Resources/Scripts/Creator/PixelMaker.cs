@@ -11,6 +11,7 @@ namespace PixelSimulation.Creator
         public void Update()
         {
             if (Input.GetMouseButton(0)) CreatePixel();
+            if (Input.GetMouseButton(1)) DestroyPixel();
         }
 
         public void CreatePixel()
@@ -21,6 +22,17 @@ namespace PixelSimulation.Creator
             if (PixelPhysicsManager.instance.IsFree(position))
             {
                 Instantiate(pixelPrefab, new Vector2(position.x,position.y), Quaternion.identity);
+            }
+        }
+
+        public void DestroyPixel()
+        {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePos.z = 0.0f;
+            Vector2Int position = new Vector2Int((int)mousePos.x, (int)mousePos.y);
+            if (PixelPhysicsManager.instance.pixels.ContainsKey(position))
+            {
+                PixelPhysicsManager.instance.DestroyPixel(position);
             }
         }
     }

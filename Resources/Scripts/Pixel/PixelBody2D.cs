@@ -75,6 +75,12 @@ namespace PixelSimulation.Pixel
             return _position;
         }
 
+        public void Destroy()
+        {
+            pixelPhysics.UpdateNearbyPixels(this);
+            Destroy(this.gameObject);
+        }
+
         private void SetPosition(Vector2Int position)
         {
             _position = position;
