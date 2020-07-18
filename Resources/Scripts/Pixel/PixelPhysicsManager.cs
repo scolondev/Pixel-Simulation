@@ -47,6 +47,10 @@ namespace PixelSimulation.Pixel
             surroundingPositions.Add(new Vector2Int(position.x, position.y - 1)); //Down
             surroundingPositions.Add(new Vector2Int(position.x - 1, position.y)); //Left
             surroundingPositions.Add(new Vector2Int(position.x + 1, position.y)); //Right
+           /* surroundingPositions.Add(new Vector2Int(position.x - 1, position.y + 1)); //Up Left
+            surroundingPositions.Add(new Vector2Int(position.x - 1, position.y - 1)); //Down Left
+            surroundingPositions.Add(new Vector2Int(position.x + 1, position.y + 1)); //Up Right
+            surroundingPositions.Add(new Vector2Int(position.x + 1, position.y - 1)); //Down Right */
 
             //For each surrounding position, if we have that key, make sure that that key is active.
             //This might cause problems
