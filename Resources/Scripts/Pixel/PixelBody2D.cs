@@ -27,31 +27,27 @@ namespace PixelSimulation.Pixel
         }
 
         public void Move()
-        {
+        {   
             //Move down
             List<Vector2Int> positions = GetOpenLocations();
-            if(positions.Count > 0)
+            if (positions.Count > 0)
             {
                 int rand = Random.Range(0, positions.Count);
                 pixelPhysics.FreePixel(_position);
                 SetPosition(positions[rand]);
-                pixelPhysics.SetPixel(_position, this);     
-            } else
-            {
-                //If we couldn't find any open positions, then we probably can't move-
-             //   if(!HasAir())
-             //   pixelPhysics.RemoveActivePixel(this);
+                pixelPhysics.SetPixel(_position, this);
             }
+            else if (IsGroundInactive()) pixelPhysics.RemoveActivePixel(this);
         }
 
         public List<Vector2Int> GetOpenLocations()
         {
             List<Vector2Int> positions = new List<Vector2Int>();
             Vector2Int position = GetPosition();
-            Vector2Int down = new Vector2Int(position.x, position.y - 1);
-            Vector2Int downleft = new Vector2Int(position.x -1, position.y -1);
-            Vector2Int downright = new Vector2Int(position.x + 1, position.y -1);
-
+            Vector2Int down = new Vector2Int(position.x, position.y + (1 * pixelPhysics.gravity));
+            Vector2Int downleft = new Vector2Int(position.x - 1, position.y + (1 * pixelPhysics.gravity));
+            Vector2Int downright = new Vector2Int(position.x + 1, position.y + (1 * pixelPhysics.gravity));
+            
             if (pixelPhysics.IsFree(down)) positions.Add(down);
             if (pixelPhysics.IsFree(downleft)) positions.Add(downleft);
             if (pixelPhysics.IsFree(downright)) positions.Add(downright);
@@ -85,6 +81,20 @@ namespace PixelSimulation.Pixel
         {
             _position = position;
             transform.position = new Vector2(_position.x,_position.y);
+        }
+
+        private bool IsGroundInactive()
+        {
+            Vector2Int position = new Vector2Int(_position.x, _position.y + (1 * pixelPhysics.gravity));
+            if (pixelPhysics.pixels.ContainsKey(position))
+            {
+                //If it is static, return true
+                //If it is not static, return whether it is considered inactive.
+                return pixelPhysics.pixels[position].isStatic ? true : pixelPhysics.inactivePixels.Contains(pixelPhysics.pixels[position]);
+            } else
+            {
+                return false;
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace PixelSimulation.Pixel
@@ -15,9 +16,11 @@ namespace PixelSimulation.Pixel
         public Dictionary<Vector2Int, PixelBody2D> pixels = new Dictionary<Vector2Int, PixelBody2D>();
         public GameObject activePixelsParent;
         public GameObject inactivePixelsParent;
-        private List<PixelBody2D> activePixels = new List<PixelBody2D>();
-        private List<PixelBody2D> inactivePixels = new List<PixelBody2D>();
-        public float gravity = -9.8f;
+        public readonly List<PixelBody2D> activePixels = new List<PixelBody2D>();
+        public readonly List<PixelBody2D> inactivePixels = new List<PixelBody2D>();
+
+        [Range(-1,1)]
+        public int gravity = -10;
         public float refreshRate = 10f;
 
         public void Start()
@@ -28,6 +31,7 @@ namespace PixelSimulation.Pixel
         {
      //       float time = Time.realtimeSinceStartup;
             List<PixelBody2D> update = new List<PixelBody2D>(activePixels);
+
             foreach(var key in update)
             {
                 key.PhysicsUpdate();
@@ -58,7 +62,7 @@ namespace PixelSimulation.Pixel
                 if (pixels.ContainsKey(pos) && inactivePixels.Contains(pixels[pos]))
                 {
                     AddActivePixel(pixels[pos]);
-                   // UpdateNearbyPixels(pixels[pos]);
+                    UpdateNearbyPixels(pixels[pos]);
                 }
             }
         }
