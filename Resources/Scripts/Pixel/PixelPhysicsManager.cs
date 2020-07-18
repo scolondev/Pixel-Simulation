@@ -13,6 +13,7 @@ namespace PixelSimulation.Pixel
         }
 
         public Dictionary<Vector2Int, PixelBody2D> pixels = new Dictionary<Vector2Int, PixelBody2D>();
+        private List<PixelBody2D> activePixels = new List<PixelBody2D>();
         public float gravity = -9.8f;
         public float refreshRate = 10f;
 
@@ -23,23 +24,35 @@ namespace PixelSimulation.Pixel
 
         public void PixelUpdate()
         {
-            Dictionary<Vector2Int, PixelBody2D> update = new Dictionary<Vector2Int, PixelBody2D>(pixels);
+            float time = Time.realtimeSinceStartup;
+            List<PixelBody2D> update = new List<PixelBody2D>(activePixels);
             foreach(var key in update)
             {
-                key.Value.PhysicsUpdate();
+                key.PhysicsUpdate();
             }
+            Debug.Log("Time Elapsed " + ((Time.realtimeSinceStartup - time) * 1000f));
         }
 
         public void FreePixel(Vector2Int position)
         {
             pixels.Remove(position);
         }
+
         public void SetPixel(Vector2Int position, PixelBody2D body)
         {
             if (pixels.ContainsKey(position)) pixels[position] = body;
             else pixels.Add(position, body);
         }
 
+        public void AddActivePixel(PixelBody2D body)
+        {
+            if (!activePixels.Contains(body)) activePixels.Add(body);
+        }
+
+        public void RemoveActivePixel(PixelBody2D body)
+        {
+            if (activePixels.Contains(body)) activePixels.Remove(body);
+        }
         public bool IsFree(Vector2Int position)
         {
             if (!pixels.ContainsKey(position)) return true;

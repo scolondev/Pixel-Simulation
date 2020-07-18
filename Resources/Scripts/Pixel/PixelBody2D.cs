@@ -14,13 +14,15 @@ namespace PixelSimulation.Pixel
         private void Start()
         {
             pixelPhysics = PixelPhysicsManager.instance;
+            if(!isStatic) pixelPhysics.AddActivePixel(this);
+
             SetPosition(new Vector2Int((int)transform.position.x, (int)transform.position.y));
+
             pixelPhysics.SetPixel(GetPosition(), this);
         }
 
         public void PhysicsUpdate()
         {
-            if (isStatic) return;
             Move();
         }
 
@@ -33,7 +35,11 @@ namespace PixelSimulation.Pixel
                 int rand = Random.Range(0, positions.Count);
                 pixelPhysics.FreePixel(_position);
                 SetPosition(positions[rand]);
-                pixelPhysics.SetPixel(_position, this);
+                pixelPhysics.SetPixel(_position, this);     
+            } else
+            {
+                //If we couldn't find any open positions, then we probably can't move-
+                pixelPhysics.RemoveActivePixel(this);
             }
         }
 
