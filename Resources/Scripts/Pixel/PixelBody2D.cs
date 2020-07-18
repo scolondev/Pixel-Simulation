@@ -39,6 +39,7 @@ namespace PixelSimulation.Pixel
             } else
             {
                 //If we couldn't find any open positions, then we probably can't move-
+                if(!HasAir())
                 pixelPhysics.RemoveActivePixel(this);
             }
         }
@@ -56,6 +57,18 @@ namespace PixelSimulation.Pixel
             if (pixelPhysics.IsFree(downright)) positions.Add(downright);
 
             return positions;
+        }
+
+        public bool HasAir()
+        {
+            Vector2Int up = new Vector2Int(_position.x, _position.y + 1);
+            Vector2Int down = new Vector2Int(_position.x, _position.y - 1);
+            Vector2Int left = new Vector2Int(_position.x - 1, _position.y);
+            Vector2Int right = new Vector2Int(_position.x + 1, _position.y);
+
+            if (pixelPhysics.IsFree(down) || pixelPhysics.IsFree(up) || pixelPhysics.IsFree(left) || pixelPhysics.IsFree(right))
+                return true;
+            else return false;
         }
         public Vector2Int GetPosition()
         {
