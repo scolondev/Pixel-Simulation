@@ -39,8 +39,8 @@ namespace PixelSimulation.Pixel
             } else
             {
                 //If we couldn't find any open positions, then we probably can't move-
-                if(!HasAir())
-                pixelPhysics.RemoveActivePixel(this);
+             //   if(!HasAir())
+             //   pixelPhysics.RemoveActivePixel(this);
             }
         }
 

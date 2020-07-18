@@ -24,7 +24,6 @@ namespace PixelSimulation.Pixel
         {
             InvokeRepeating("PixelUpdate", 0, 1.0f / refreshRate);
         }
-
         public void PixelUpdate()
         {
      //       float time = Time.realtimeSinceStartup;
@@ -59,10 +58,11 @@ namespace PixelSimulation.Pixel
                 if (pixels.ContainsKey(pos) && inactivePixels.Contains(pixels[pos]))
                 {
                     AddActivePixel(pixels[pos]);
-                    UpdateNearbyPixels(pixels[pos]);
+                   // UpdateNearbyPixels(pixels[pos]);
                 }
             }
         }
+
         public void FreePixel(Vector2Int position)
         {
             pixels.Remove(position);

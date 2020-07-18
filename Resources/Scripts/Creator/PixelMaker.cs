@@ -8,6 +8,7 @@ namespace PixelSimulation.Creator
     public class PixelMaker : MonoBehaviour
     {
         public GameObject pixelPrefab;
+        public int brushSize = 0;
         public void Update()
         {
             if (Input.GetMouseButton(0)) CreatePixel();
@@ -21,7 +22,9 @@ namespace PixelSimulation.Creator
             Vector2Int position = new Vector2Int((int)mousePos.x, (int)mousePos.y);
             if (PixelPhysicsManager.instance.IsFree(position))
             {
-                Instantiate(pixelPrefab, new Vector2(position.x,position.y), Quaternion.identity);
+                for(int x = 0; x < brushSize; x++)
+                    for(int y = 0; y < brushSize; y++)
+                        Instantiate(pixelPrefab, new Vector2(position.x + x, position.y + y), Quaternion.identity);
             }
         }
 
