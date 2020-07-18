@@ -27,9 +27,13 @@ namespace PixelSimulation.Pixel
         {
             InvokeRepeating("PixelUpdate", 0, 1.0f / refreshRate);
         }
+
+        /// <summary>
+        /// The physics update function for pixels
+        /// </summary>
         public void PixelUpdate()
         {
-     //       float time = Time.realtimeSinceStartup;
+           // float time = Time.realtimeSinceStartup;
             List<PixelBody2D> update = new List<PixelBody2D>(activePixels);
 
             foreach(var key in update)
@@ -37,9 +41,13 @@ namespace PixelSimulation.Pixel
                 key.PhysicsUpdate();
               //  UpdateNearbyPixels(key);
             }
-      //      Debug.Log("Time Elapsed " + ((Time.realtimeSinceStartup - time) * 1000f));
+           // Debug.Log("Time Elapsed " + ((Time.realtimeSinceStartup - time) * 1000f));
         }
 
+        /// <summary>
+        /// Updates nearby pixels so they are no longer inactive
+        /// </summary>
+        /// <param name="body"></param>
         public void UpdateNearbyPixels(PixelBody2D body)
         {
             //  if (inactivePixels.Contains(body)) return;
@@ -67,11 +75,19 @@ namespace PixelSimulation.Pixel
             }
         }
 
+        /// <summary>
+        /// Frees a position
+        /// </summary>
+        /// <param name="position"></param>
         public void FreePixel(Vector2Int position)
         {
             pixels.Remove(position);
         }
 
+        /// <summary>
+        /// Destroys a pixel
+        /// </summary>
+        /// <param name="position"></param>
         public void DestroyPixel(Vector2Int position)
         {
             if (pixels.ContainsKey(position))
@@ -83,12 +99,23 @@ namespace PixelSimulation.Pixel
                 body.Destroy();
             }
         }
+
+
+        /// <summary>
+        /// Sets the state of a particular position
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="body"></param>
         public void SetPixel(Vector2Int position, PixelBody2D body)
         {
             if (pixels.ContainsKey(position)) pixels[position] = body;
             else pixels.Add(position, body);
         }
 
+        /// <summary>
+        /// Adds an active pixel.
+        /// </summary>
+        /// <param name="body"></param>
         public void AddActivePixel(PixelBody2D body)
         {
             body.transform.SetParent(activePixelsParent.transform);
@@ -96,12 +123,22 @@ namespace PixelSimulation.Pixel
             if (inactivePixels.Contains(body)) inactivePixels.Remove(body);
         }
 
+        /// <summary>
+        /// Removes an active pixel.
+        /// </summary>
+        /// <param name="body"></param>
         public void RemoveActivePixel(PixelBody2D body)
         {
             body.transform.SetParent(inactivePixelsParent.transform);
             if (activePixels.Contains(body)) activePixels.Remove(body);
             if (!inactivePixels.Contains(body)) inactivePixels.Add(body);
         }
+
+        /// <summary>
+        /// Returns if a position is free to move to
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public bool IsFree(Vector2Int position)
         {
             if (!pixels.ContainsKey(position)) return true;

@@ -21,11 +21,17 @@ namespace PixelSimulation.Pixel
             pixelPhysics.SetPixel(GetPosition(), this);
         }
 
+        /// <summary>
+        /// What to do when physics updates.
+        /// </summary>
         public void PhysicsUpdate()
         {
             Move();
         }
 
+        /// <summary>
+        /// Moves the pixel
+        /// </summary>
         public void Move()
         {   
             //Move down
@@ -40,6 +46,10 @@ namespace PixelSimulation.Pixel
             else if (IsGroundInactive()) pixelPhysics.RemoveActivePixel(this);
         }
 
+        /// <summary>
+        /// Returns a list of open locations near the pixel relative to gravity.
+        /// </summary>
+        /// <returns></returns>
         public List<Vector2Int> GetOpenLocations()
         {
             List<Vector2Int> positions = new List<Vector2Int>();
@@ -54,35 +64,40 @@ namespace PixelSimulation.Pixel
 
             return positions;
         }
-
-        public bool HasAir()
-        {
-            Vector2Int up = new Vector2Int(_position.x, _position.y + 1);
-            Vector2Int down = new Vector2Int(_position.x, _position.y - 1);
-            Vector2Int left = new Vector2Int(_position.x - 1, _position.y);
-            Vector2Int right = new Vector2Int(_position.x + 1, _position.y);
-
-            if (pixelPhysics.IsFree(down) || pixelPhysics.IsFree(up) || pixelPhysics.IsFree(left) || pixelPhysics.IsFree(right))
-                return true;
-            else return false;
-        }
-        public Vector2Int GetPosition()
-        {
-            return _position;
-        }
-
+   
+        /// <summary>
+        /// Destroys this pixel
+        /// </summary>
         public void Destroy()
         {
             pixelPhysics.UpdateNearbyPixels(this);
             Destroy(this.gameObject);
         }
 
+        /// <summary>
+        /// Returns the VectorInt Postion
+        /// </summary>
+        /// <returns></returns>
+        public Vector2Int GetPosition()
+        {
+            return _position;
+        }
+
+        /// <summary>
+        /// Sets the VectorInt Position
+        /// </summary>
+        /// <param name="position"></param>
         private void SetPosition(Vector2Int position)
         {
             _position = position;
             transform.position = new Vector2(_position.x,_position.y);
         }
 
+
+        /// <summary>
+        /// Returns if the ground isn't active.
+        /// </summary>
+        /// <returns></returns>
         private bool IsGroundInactive()
         {
             Vector2Int position = new Vector2Int(_position.x, _position.y + (1 * pixelPhysics.gravity));

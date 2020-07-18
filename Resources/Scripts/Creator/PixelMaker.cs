@@ -15,6 +15,9 @@ namespace PixelSimulation.Creator
             if (Input.GetMouseButton(1)) DestroyPixel();
         }
 
+        /// <summary>
+        /// Creates pixel
+        /// </summary>
         public void CreatePixel()
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -28,6 +31,9 @@ namespace PixelSimulation.Creator
             }
         }
 
+        /// <summary>
+        /// Destroys pixel
+        /// </summary>
         public void DestroyPixel()
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
