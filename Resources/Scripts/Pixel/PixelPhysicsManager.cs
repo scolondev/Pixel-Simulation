@@ -28,6 +28,13 @@ namespace PixelSimulation.Pixel
             InvokeRepeating("PixelUpdate", 0, 1.0f / refreshRate);
         }
 
+        public void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                MergePixels(inactivePixels);
+            }
+        }
         /// <summary>
         /// The physics update function for pixels
         /// </summary>
@@ -39,7 +46,6 @@ namespace PixelSimulation.Pixel
             foreach(var key in update)
             {
                 key.PhysicsUpdate();
-              //  UpdateNearbyPixels(key);
             }
            // Debug.Log("Time Elapsed " + ((Time.realtimeSinceStartup - time) * 1000f));
         }
@@ -134,6 +140,31 @@ namespace PixelSimulation.Pixel
             if (!inactivePixels.Contains(body)) inactivePixels.Add(body);
         }
 
+        public void MergePixels(List<PixelBody2D> pixels)
+        {
+            Texture2D tex = new Texture2D(500,500);
+            for(int x = 0; x < tex.width; x++)
+            {
+                for(int y = 0; y < tex.height; y++)
+                {
+                    tex.SetPixel(x, y, Color.clear);
+                }
+            }
+
+            foreach(var pixel in pixels)
+            {
+                Vector2Int position = pixel.GetPosition();
+                tex.SetPixel(position.x, position.y, Color.white);
+               // Destroy(pixel.gameObject);
+                pixel.gameObject.SetActive(false);
+               // pixel.Destroy();
+            }
+            
+            tex.Apply();
+            GameObject sprite = new GameObject();
+            SpriteRenderer sr = sprite.AddComponent<SpriteRenderer>();
+            sr.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0, 0),1,0,SpriteMeshType.FullRect);
+        }
         /// <summary>
         /// Returns if a position is free to move to
         /// </summary>
